@@ -4,6 +4,7 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\User;
 use AppBundle\Form\UserType;
+use AppBundle\Services\UserService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
@@ -23,9 +24,9 @@ class UserController extends Controller
      * @param EntityManagerInterface $em
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction(EntityManagerInterface $em)
+    public function indexAction(UserService $userService)
     {
-        $users = $em->getRepository(User::class)->findAll();
+        $users = $userService->findAll();
         return $this->render('AppBundle:User:index.html.twig', array(
             'users' => $users,
         ));
@@ -38,7 +39,7 @@ class UserController extends Controller
      * @param EntityManagerInterface $em
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function addAction(Request $request, UserPasswordEncoderInterface $encoder, EntityManagerInterface $em)
+    public function addAction(Request $request, UserService $userService)
     {
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
@@ -46,11 +47,7 @@ class UserController extends Controller
 
         if ($form->isSubmitted() and $form->isValid()) {
 
-            $password = $encoder->encodePassword($user, $user->getPassword());
-            $user->setPassword($password);
-
-            $em->persist($user);
-            $em->flush();
+            $user = $userService->add($user);
 
             $this->redirectToRoute('user_show', array(
                 'user' => $user->getId(),
