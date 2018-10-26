@@ -2,8 +2,15 @@
 
 namespace AppBundle\Controller;
 
+use AppBundle\Entity\User;
+use AppBundle\Form\UserType;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Security\Core\Encoder\PasswordEncoderInterface;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
  * Class UserController
@@ -13,24 +20,61 @@ class UserController extends Controller
 {
     /**
      * @Route("/index")
+     * @param EntityManagerInterface $em
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function indexAction()
+    public function indexAction(EntityManagerInterface $em)
     {
-
+        $users = $em->getRepository(User::class)->findAll();
         return $this->render('AppBundle:User:index.html.twig', array(
-            // ...
+            'users' => $users,
         ));
     }
 
     /**
      * @Route("/user/add", name="user_add")
+     * @param Request $request
+     * @param PasswordEncoderInterface $encoder
+     * @param EntityManagerInterface $em
+     * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function addAction()
+    public function addAction(Request $request, UserPasswordEncoderInterface $encoder, EntityManagerInterface $em)
     {
+        $user = new User();
+        $form = $this->createForm(UserType::class, $user);
+        $form->handleRequest($request);
 
-        return $this->render('AppBundle:User:index.html.twig', array(
-            // ...
+        if ($form->isSubmitted() and $form->isValid()) {
+
+            $password = $encoder->encodePassword($user, $user->getPassword());
+            $user->setPassword($password);
+
+            $em->persist($user);
+            $em->flush();
+
+            $this->redirectToRoute('user_show', array(
+                'user' => $user->getId(),
+            ));
+
+        }
+
+        return $this->render('AppBundle:User:add.html.twig', array(
+            'form' => $form->createView(),
         ));
     }
+
+    /**
+     * @Route("/user/{user}", name="user_show")
+     * @param Request $request
+     * @param User $user
+     */
+    public function userAction(Request $request, User $user)
+    {
+
+        dump($user);
+        die;
+
+    }
+
 
 }
