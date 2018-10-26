@@ -4,6 +4,8 @@ namespace AppBundle\Entity;
 
 use AppBundle\Entity\Traits\TimestableTrait;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
@@ -12,6 +14,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
  * @ORM\Table(name="user")
  * @ORM\Entity(repositoryClass="AppBundle\Repository\UserRepository")
  * @ORM\HasLifecycleCallbacks()
+ *
  */
 class User implements UserInterface
 {
@@ -29,6 +32,7 @@ class User implements UserInterface
     /**
      * @var string
      *
+     * @Assert\NotBlank()
      * @ORM\Column(name="firstName", type="string", length=50)
      */
     private $firstName;
@@ -36,6 +40,7 @@ class User implements UserInterface
     /**
      * @var string
      *
+     * @Assert\NotBlank()
      * @ORM\Column(name="lastName", type="string", length=50)
      */
     private $lastName;
@@ -43,6 +48,7 @@ class User implements UserInterface
     /**
      * @var \DateTime
      *
+     * @Assert\Date()
      * @ORM\Column(name="birthday", type="date")
      */
     private $birthday;
@@ -56,7 +62,7 @@ class User implements UserInterface
 
     /**
      * @var string
-     *
+     * @Assert\NotBlank()
      * @ORM\Column(name="email", type="string", length=100, unique=true)
      */
     private $email;
@@ -71,6 +77,7 @@ class User implements UserInterface
     /**
      * @var string
      *
+     * @Assert\File()
      * @ORM\Column(name="image", type="text", nullable=true)
      */
     private $image;
