@@ -39,6 +39,10 @@ class Tag
      */
     private $posts;
 
+    public function __toString()
+    {
+        return $this->name;
+    }
 
     /**
      * Constructor

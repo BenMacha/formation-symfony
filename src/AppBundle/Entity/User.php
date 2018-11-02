@@ -103,6 +103,11 @@ class User implements UserInterface
         $this->posts = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
+    public function __toString()
+    {
+        return $this->email;
+    }
+
     /**
      * Get id
      *
