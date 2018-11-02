@@ -368,4 +368,18 @@ class User implements UserInterface
     {
         return null;// TODO: Implement eraseCredentials() method.
     }
+
+    /**
+     * Set roles
+     *
+     * @param array $roles
+     *
+     * @return User
+     */
+    public function setRoles($roles)
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }
 }
