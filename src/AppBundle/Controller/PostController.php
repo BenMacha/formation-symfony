@@ -37,7 +37,7 @@ class PostController extends Controller
      * @param Post|null $post
      */
 
-    public function addAction( Request $request, EntityManagerInterface $em, Post $post = null){
+    public function addAction(Request $request, EntityManagerInterface $em, Post $post = null){
 
         if (!$post)
             $post  = new Post();

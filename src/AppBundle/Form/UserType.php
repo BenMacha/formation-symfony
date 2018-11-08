@@ -18,12 +18,12 @@ class UserType extends AbstractType
         $builder
             ->add('firstName')
             ->add('lastName')
-            ->add('birthday')
+            //->add('birthday')
             ->add('email',EmailType::class, array())
             ->add('password', RepeatedType::class, array(
 
             ))
-           // ->add('image')
+            ->add('image')
         ;
     }
     

@@ -2,8 +2,8 @@
 /**
  * Created by PhpStorm.
  * User: benmacha
- * Date: 10/26/18
- * Time: 5:18 PM
+ * Date: 11/8/18
+ * Time: 12:35
  */
 
 namespace AppBundle\Services;
@@ -15,38 +15,47 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 class UserService
 {
+
     /**
      * @var EntityManagerInterface
      */
     private $em;
 
-    private $repository;
+    /**
+     * @var \AppBundle\Repository\UserRepository|\Doctrine\Common\Persistence\ObjectRepository
+     */
+    private $repo;
+
     /**
      * @var UserPasswordEncoderInterface
      */
     private $encoder;
 
-    function __construct(EntityManagerInterface $em, UserPasswordEncoderInterface $encoder)
+    public function __construct(EntityManagerInterface $em, UserPasswordEncoderInterface $encoder)
     {
         $this->em = $em;
-        $this->repository = $em->getRepository(User::class);
+        $this->repo = $em->getRepository(User::class);
         $this->encoder = $encoder;
     }
 
-    public function findAll()
-    {
-        return $this->repository->findAll();
+    /**
+     * @return User[]|array
+     */
+    public function getAll(){
+        return $this->repo->findAll();
     }
 
+    /**
+     * @param User $user
+     * @return User
+     */
     public function add(User $user)
     {
         $password = $this->encoder->encodePassword($user, $user->getPassword());
         $user->setPassword($password);
-
         $this->em->persist($user);
         $this->em->flush();
 
         return $user;
     }
-
 }

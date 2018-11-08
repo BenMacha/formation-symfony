@@ -49,7 +49,7 @@ class User implements UserInterface
      * @var \DateTime
      *
      * @Assert\Date()
-     * @ORM\Column(name="birthday", type="date")
+     * @ORM\Column(name="birthday", type="date", nullable=true)
      */
     private $birthday;
 

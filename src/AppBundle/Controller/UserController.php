@@ -26,17 +26,15 @@ class UserController extends Controller
      */
     public function indexAction(UserService $userService)
     {
-        $users = $userService->findAll();
         return $this->render('AppBundle:User:index.html.twig', array(
-            'users' => $users,
+            'users' => $userService->getAll(),
         ));
     }
 
     /**
      * @Route("/user/add", name="user_add")
      * @param Request $request
-     * @param PasswordEncoderInterface $encoder
-     * @param EntityManagerInterface $em
+     * @param UserService $userService
      * @return \Symfony\Component\HttpFoundation\Response
      */
     public function addAction(Request $request, UserService $userService)

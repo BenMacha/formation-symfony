@@ -33,3 +33,10 @@ services:
     # AppBundle\Service\ExampleService:
     #     arguments:
     #         $someArgument: 'some_value'
+
+    AppBundle\Uploader\FileUploader:
+        arguments: ['%uploader_dir%']
+
+    AppBundle\Listener\UploadUserPictureListener:
+        tags:
+        - { name: doctrine.event_subscriber, lazy: true }
